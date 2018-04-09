@@ -7,7 +7,11 @@ import com.rockingstar.engine.game.AbstractGame;
 import com.rockingstar.engine.game.Player;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
+import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
 import java.util.Random;
 
 public class TTTController extends AbstractGame {
@@ -41,6 +45,7 @@ public class TTTController extends AbstractGame {
 
     @Override
     public void doPlayerMove(int x, int y) {
+<<<<<<< HEAD
         if (_model.hasWon(currentPlayer)) {
             _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
             _view.setIsFinished(true);
@@ -52,30 +57,64 @@ public class TTTController extends AbstractGame {
             return;
         }
 
-        if (_model.isValidMove(x, y)) {
-            if (yourTurn) {
-                CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
-                _model.setPlayerAtPosition(currentPlayer, x, y);
-                _view.setCellImage(x, y);
-                yourTurn = false;
-                setCurrentPlayer(1);
-            }
-            else {
-                _view.setErrorStatus("It's not your turn");
-            }
+//        if (_model.isValidMove(x, y)) {
+//            if (yourTurn) {
+//                CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
+//                _model.setPlayerAtPosition(currentPlayer, x, y);
+//                _view.setCellImage(x, y);
+//                yourTurn = false;
+//                setCurrentPlayer(1);
+//            }
+//            else {
+//                _view.setErrorStatus("It's not your turn");
+//            }
+//        }
+//        else
+//            _view.setErrorStatus("Invalid move");
+        if (!gameFinished()) {
+            if (_model.isValidMove(x, y)) {
+                if (yourTurn) {
+                    CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
+                    _model.setPlayerAtPosition(currentPlayer, x, y);
+                    _view.setCellImage(x, y);
+                    yourTurn = false;
+                    setCurrentPlayer(1);
+                } else {
+                    _view.setErrorStatus("It's not your turn");
+                }
+            } else
+                _view.setErrorStatus("Invalid move");
+        } else{
+            gameEnded();
         }
-        else
-            _view.setErrorStatus("Invalid move");
+        /*if (currentPlayer == player2) {
+            randomGenerator();
+        }*/
     }
+//    public void randomGenerator() {
+//        Random rand = new Random();
+//        int tempX = 3;
+//        int tempY = 3;
+//        while (!_model.isValidMove(tempX, tempY)) {
+//            tempX = rand.nextInt(2 + 1);
+//            tempY = rand.nextInt(2 + 1);
+//        }
+//        doPlayerMove(tempX, tempY);
+//    }
 
     @Override
     public void doPlayerMove(int position) {
-        int x = position / 3;
-        int y = position % 3;
+        if (!gameFinished()) {
+            if (yourTurn) {
+                return;
+            }
+            int x = position % 3;
+            int y = position / 3;
 
-        _model.setPlayerAtPosition(currentPlayer, x, y);
-        _view.setCellImage(x, y);
-        setCurrentPlayer(0);
+            _model.setPlayerAtPosition(currentPlayer, x, y);
+            _view.setCellImage(x, y);
+            setCurrentPlayer(0);
+        }
     }
 
     public boolean getIsYourTurn() {
@@ -87,5 +126,43 @@ public class TTTController extends AbstractGame {
         currentPlayer = id == 0 ? player1 : player2;
         _view.setStatus(_model.getTurnMessage(currentPlayer));
     }
+
+    public boolean gameFinished(){
+        if (_model.hasWon(currentPlayer)) {
+            _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
+            _view.setIsFinished(true);
+            return true;
+        }
+        else if(_model.isFull()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void gameEnded(){
+        super.gameEnded();
+        _view.setIsFinished(true);
+        if(!_model.isFull()) {
+            _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
+        } else {
+            _view.setStatus("It's a draw! N00bs");
+        }
+
+        Platform.runLater(() -> {
+            Alert returnToLobby = new Alert(Alert.AlertType.CONFIRMATION);
+            returnToLobby.setTitle("Game ended!");
+            returnToLobby.setHeaderText(null);
+            returnToLobby.setContentText("Do you want to return to the lobby?");
+
+            returnToLobby.showAndWait();
+
+            if (returnToLobby.getResult() == ButtonType.OK) {
+                System.out.println("go to lobby....");
+            }
+        });
+
+    }
+
 
 }

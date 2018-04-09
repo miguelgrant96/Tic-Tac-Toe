@@ -144,6 +144,7 @@ public class TTTView {
                     }
                 });
             }
+<<<<<<< HEAD
         });*/
 
         Platform.runLater(() -> {
@@ -163,9 +164,9 @@ public class TTTView {
                     _errorStatus.setText("It's not your turn, buddy");
                 }
             }
+            _pane.add(imageView, x, y);
         });
 
-        Platform.runLater(() -> _pane.add(imageView, x, y));
     }
 
     public Button getNewGameButton() {
