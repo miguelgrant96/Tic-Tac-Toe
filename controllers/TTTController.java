@@ -63,11 +63,6 @@ public class TTTController extends AbstractGame {
             else {
                 _view.setErrorStatus("It's not your turn");
             }
-
-/*            if (currentPlayer == player2) {
-                randomGenerator();
-            }*/
-
         }
         else
             _view.setErrorStatus("Invalid move");
@@ -81,17 +76,6 @@ public class TTTController extends AbstractGame {
         _model.setPlayerAtPosition(currentPlayer, x, y);
         _view.setCellImage(x, y);
         setCurrentPlayer(0);
-    }
-
-    public void randomGenerator() {
-        Random rand = new Random();
-        int tempX = 3;
-        int tempY = 3;
-        while (!_model.isValidMove(tempX, tempY)) {
-            tempX = rand.nextInt(2 + 1);
-            tempY = rand.nextInt(2 + 1);
-        }
-        doPlayerMove(tempX, tempY);
     }
 
     public boolean getIsYourTurn() {
