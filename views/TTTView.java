@@ -3,6 +3,7 @@ package com.rockingstar.modules.TicTacToe.views;
 import com.rockingstar.engine.game.Player;
 import com.rockingstar.engine.io.models.Util;
 import com.rockingstar.modules.TicTacToe.controllers.TTTController;
+import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -20,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.net.URISyntaxException;
+import java.util.Random;
 
 public class TTTView {
 
@@ -37,6 +39,7 @@ public class TTTView {
     private Label _errorStatus;
 
     private TTTController _controller;
+    private TTTModel _model;
 
     private boolean _isFinished;
     private HBox _labels;
@@ -123,7 +126,7 @@ public class TTTView {
             Util.exit("Loading TicTacToe images");
         }
 
-        Platform.runLater(() -> {
+/*        Platform.runLater(() -> {
             if (_board[x][y] == null) {
                 final int tempX = x;
                 final int tempY = y;
@@ -140,6 +143,25 @@ public class TTTView {
                             _errorStatus.setText("It's not your turn, buddy");
                     }
                 });
+            }
+        });*/
+
+        Platform.runLater(() -> {
+            if (_board[x][y] == null) {
+                Random rand = new Random();
+/*                int tempX = 3;
+                int tempY = 3;
+
+                while (!_model.isValidMove(tempX, tempY)) {*/
+                    int tempX = rand.nextInt(2 + 1);
+                    int tempY = rand.nextInt(2 + 1);
+                /*}*/
+                if (!_isFinished && _controller.getIsYourTurn()) {
+                    imageView.setImage(null);
+                    _controller.doPlayerMove(tempX, tempY);
+                } else if (!_controller.getIsYourTurn()) {
+                    _errorStatus.setText("It's not your turn, buddy");
+                }
             }
         });
 
