@@ -50,6 +50,7 @@ public class TTTView {
 
         _status = new Label();
         _status.setFont(new Font(16));
+        _status.setId("topText");
 
         _errorStatus = new Label();
         _errorStatus.setFont(new Font(16));
@@ -145,6 +146,7 @@ public class TTTView {
                 });
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
         });*/
 
         Platform.runLater(() -> {
@@ -164,9 +166,11 @@ public class TTTView {
                     _errorStatus.setText("It's not your turn, buddy");
                 }
             }
+=======
+
+>>>>>>> upstream/master
             _pane.add(imageView, x, y);
         });
-
     }
 
     public Button getNewGameButton() {
